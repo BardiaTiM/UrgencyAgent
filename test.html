@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+      font-size: 14px;
+    }
+
+    #external-events {
+      position: fixed;
+      z-index: 2;
+      top: 20px;
+      left: 20px;
+      width: 170px;
+      padding: 0 10px;
+      border: 1px solid #ccc;
+      background: #eee;
+    }
+
+    #external-events .fc-event {
+      cursor: move;
+      margin: 3px 0;
+    }
+
+    #calendar-container {
+      position: relative;
+      z-index: 1;
+      margin-left: 200px;
+    }
+
+    #calendar {
+      max-width: 1100px;
+      margin: 20px auto;
+    }
+  </style>
+  <head>
+    <meta charset="utf-8" />
+    <script src="node_modules\fullcalendar\index.global.js"></script>
+  </head>
+  <body>
+    <div id="external-events">
+      <p>
+        <strong>Add New Task</strong>
+      </p>
+      <form id="task-form">
+        <label for="task-name">Task Name:</label><br />
+        <input type="text" id="task-name" /><br />
+        <br />
+        <label for="task-date">Due Date:</label><br />
+        <input type="date" id="task-date"/><br />
+        <br />
+        <label for="task-time">Due Time:</label><br />
+        <input type="time" id="task-time"/><br />
+        <br />
+        <label for="task-length">Task Length (hours):</label><br />
+        <input
+          type="number"
+          id="task-length"
+          min="0"
+          step="0.5"
+          required
+        /><br />
+        <br />
+        <label for="task-constant">Event:</label>
+        <input type="checkbox" id="task-constant" /><br />
+        <br />
+        <label for="task-repeat">Repeat:</label><br />
+        <select id="task-repeat">
+          <option value="none">None</option>
+          <option value="weekly">Weekly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+        <br />
+        <br />
+        <br />
+        <input type="button" value="Add Task" id="add-task-button" />
+      </form>
+
+      <p>
+        <input type="button" value="Sort Tasks" id="sort-tasks-button" />
+      </p>
+      <p><input type="button" value="log Array" id="log-tasks-button"></p>
+    </div>
+
+    <div id="calendar-container">
+      <div id="calendar"></div>
+      <ul id="task-list"></ul>
+    </div>
+
+    <script src="calendar.js"></script>
+    <script src="task6.js"></script>
+  </body>
+</html>

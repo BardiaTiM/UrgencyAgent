@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "fullcalendar": "^6.0.1",
+    "rrule": "^2.7.1"
+  }
+}

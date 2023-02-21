@@ -1,13 +1,15 @@
 class Task {
-    constructor(id, name, date, time, taskLength, isConstant) {
+    constructor(id, name, date, time, taskLength, isConstant, isDaily, isWeekly) {
       this.id = id;
       this.name = name;
       this.date = date;
       this.time = time;
       this.taskLength = taskLength;
       this.isConstant = isConstant;
+      this.isWeekly = isWeekly;
+      this.isDaily = isDaily;
     }
-  
+    
     getName() {
       return this.name;
     }
@@ -24,12 +26,24 @@ class Task {
       return this.taskLength;
     }
 
+    getIsConstant() {
+      return this.isConstant;
+    }
+
+    getIsDaily() {
+      return this.isDaily;
+    }
+
+    getIsWeekly() {
+      return this.isWeekly;
+    }
+
     getId() {
       return this.id;
     }
   
     toString() {
-      return `${this.name} - Due: ${this.date} ${this.time} - Length: ${this.taskLength} hours + - id ${this.id}`;
+      return `${this.name} - Due: ${this.date} ${this.time} - Length: ${this.taskLength} hours + - id ${this.id} - + - isConstant ${this.isConstant} - + - isDaily ${this.isDaily} - + - isWeekly ${this.isWeekly} -`;
     }
   
     urgencyRating() {
@@ -78,6 +92,18 @@ class Task {
       const task = new Task(id, taskName, taskDate, taskTime, taskLength);
       this.tasks.push(task);
       task.isConstant = document.getElementById("task-constant").checked;
+      //if task-daily is selected, set task.isDaily to true. Task-daily is an option not a checkbox
+      if (document.getElementById("task-daily").selected) {
+        task.isDaily = true;
+      } else {
+        task.isDaily = false;
+      }
+      //if task-weekly is selected, set task.isWeekly to true. Task-weekly is an option not a checkbox
+      if (document.getElementById("task-weekly").selected) {
+        task.isWeekly = true;
+      } else {
+        task.isWeekly = false;
+      }
 
       // Convert taskLength to a number
       const taskLengthNum = parseInt(taskLength);

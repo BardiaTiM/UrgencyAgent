@@ -1,44 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
   <style>
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  body {
+      background-color: #eb9ce7;
+    }
+
+
+    /**change the colour of the calendar */
+    .fc th {
+      background-color: #3a5751;
+      color: #ffffff;
+    }
+    
+    .fc-day-header {
+      background-color: #151a19;
+      color: #f51010;
+    }
+
+    #task-form {
+      background-color: #fdadad;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      width: 300px;
+    }
+
+    #task-form label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    #task-form input[type="text"],
+    #task-form input[type="date"],
+    #task-form input[type="time"],
+    #task-form input[type="number"],
+    #task-form select {
+      border: none;
+      border-radius: 3px;
+      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
       font-size: 14px;
+      padding: 8px 10px;
+      width: 100%;
+    }
+
+    #task-form input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    #add-task-button {
+      background-color: #1abc9c;
+      border: none;
+      border-radius: 3px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+    }
+
+    #add-task-button:hover {
+      background-color: #16a085;
+    }
+
+    #sort-tasks-button {
+      background-color: #1abc9c;
+      border: none;
+      border-radius: 3px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+    }
+
+    #sort-tasks-button:hover {
+      background-color: #c0392b;
     }
 
     #external-events {
-      position: fixed;
-      z-index: 2;
-      top: 20px;
-      left: 20px;
-      width: 170px;
-      padding: 0 10px;
-      border: 1px solid #ccc;
-      background: #eee;
-    }
-
-    #external-events .fc-event {
-      cursor: move;
-      margin: 3px 0;
-    }
-
-    #calendar-container {
-      position: relative;
-      z-index: 1;
-      margin-left: 200px;
+      width: 300px;
+      float: left;
     }
 
     #calendar {
-      max-width: 1100px;
-      margin: 20px auto;
+      margin: 0 auto;
+      max-width: 100%;
+      width: calc(100% - 500px);
+      
     }
+
+    
   </style>
   <head>
     <meta charset="utf-8" />
     <script src="node_modules\fullcalendar\index.global.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
   </head>
   <body>
     <div id="external-events">
@@ -77,11 +142,10 @@
         <br />
         <br />
         <input type="button" value="Add Task" id="add-task-button" />
-      </form>
-
-      <p>
         <input type="button" value="Sort Tasks" id="sort-tasks-button" />
-      </p>
+        <input type="button" value="Save" id="Save" />
+        <input type="button" value="Load" id="Load" />
+      </form>
       <p><input type="button" value="log Array" id="log-tasks-button"></p>
     </div>
 
@@ -92,5 +156,19 @@
 
     <script src="calendar.js"></script>
     <script src="task6.js"></script>
+    <script src="firebaseAPI.js"></script>
+
+    <script>
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        console.log("User is signed in");
+        //call the function to load the loadTasksFromFirestore() function
+        loadTasksFromFirestore();
+      } else {
+        console.log("User is not signed in");
+      }
+    });
+  </script>
+
   </body>
 </html>

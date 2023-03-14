@@ -71,6 +71,8 @@ class Task {
         return this.urgency;
       }
   }
+
+  
   
   // Calendar class
   class Calendar {
@@ -78,6 +80,7 @@ class Task {
       this.tasks = [];
       this.constantTasks = [];
       this.nextTaskId = 0;
+
     }
     
   
@@ -86,7 +89,8 @@ class Task {
       const taskDate = document.getElementById("task-date").value;
       const taskTime = document.getElementById("task-time").value + ":00";
       const taskLength = document.getElementById("task-length").value;
-      const id = this.nextTaskId++;
+      // random id generator
+      const id = Math.floor(Math.random() * 1000000000);
 
       // Create a new Task object
       const task = new Task(id, taskName, taskDate, taskTime, taskLength);
@@ -126,6 +130,8 @@ class Task {
   
       // Add the event to the FullCalendar Calendar object
       fullCalendarCalendar.addEvent(event);
+
+      console.log(task.date);
       // Update the task list to display the new task
       const taskList = document.getElementById("task-list");
       const newTask = document.createElement("li");
@@ -163,7 +169,7 @@ class Task {
       for (const task of tasks) {
         if (task.isConstant) {
           // print task id to console
-          console.log(task.id);
+
           // Convert taskLength to a number
           task.taskLength = parseInt(task.taskLength);
   
@@ -236,9 +242,94 @@ class Task {
     console.log(calendar.listTasks());
   }
 
+  function saveTasksToFirestore(calendar) {
+    const db = firebase.firestore();
+    const user = firebase.auth().currentUser;
+    if (!user) {
+      console.error('User not logged in');
+      return;
+    }
+    const tasksRef = db.collection('users').doc(user.uid).collection('tasks');
+  
+    // Clear the tasks collection for this user
+    tasksRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    }).then(() => {
+  
+      // Add each task in the calendar to the tasks collection for this user
+      for (const task of calendar.tasks) {
+        tasksRef.add({
+          id: task.id,
+          name: task.name,
+          date: task.date,
+          time: task.time,
+          taskLength: task.taskLength,
+          isConstant: task.isConstant,
+          isDaily: task.isDaily,
+          isWeekly: task.isWeekly,
+          urgency: task.urgency,
+        });
+        // Print task id to console
+      }
+      // Print a message to the console to indicate that the tasks have been saved
+      console.log('Tasks saved to Firestore');
+    }).catch((error) => {
+      console.error('Error clearing or saving tasks: ', error);
+    });
+  }
+
+  //everytime the page is loaded, the tasks are loaded from firestore
+  function loadTasksFromFirestore() {
+    const db = firebase.firestore();
+    const user = firebase.auth().currentUser;
+    if (!user) {
+      console.error('User not logged in');
+      return;
+    }
+    const tasksRef = db.collection('users').doc(user.uid).collection('tasks');
+    
+    // Clear the tasks array
+    calendar.tasks = [];
+
+    // Add each task in the tasks collection for this user to the calendar
+    tasksRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const task = doc.data();
+        
+        //add the info in task to the calendar array without the taskadd function
+        
+        // Create a new Task object
+        const newTask = new Task(task.id, task.name, task.date, task.time, task.taskLength, task.isConstant, task.isDaily, task.isWeekly, task.urgency);
+        // Add the new task to the calendar
+        calendar.tasks.push(newTask);
+
+        // Create a new event object for the FullCalendar Calendar object
+        const event = {
+          id: task.id,
+          title: task.name,
+          start: `${task.date}T${task.time}`,
+          end: new Date(`${task.date}T${task.time}`).getTime() + parseInt(task.taskLength) * 60 * 60 * 1000,
+        };
+        fullCalendarCalendar.addEvent(event);
+        
+      });
+    }).then(() => {
+      // Print a message to the console to indicate that the tasks have been loaded
+      console.log('Tasks loaded from Firestore');
+    }).catch((error) => {
+      console.error('Error loading tasks: ', error);
+    });
+  }
+
+  
+
+
   
   // Update the onclick handlers to use the Calendar instance's methods
   const calendar = new Calendar();
+  // document.getElementById("Save").onclick = () => saveTasksToFirestore(calendar);
   document.getElementById("add-task-button").onclick = () =>
     calendar.addTask(fullCalendarCalendar);
   document.getElementById("sort-tasks-button").onclick = () =>

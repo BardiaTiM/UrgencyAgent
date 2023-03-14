@@ -30,16 +30,30 @@ document.addEventListener("DOMContentLoaded", function () {
       right: "dayGridMonth,timeGridWeek,timeGridDay",
     },
 
+    nowIndicator: true,
     editable: true,
     droppable: true, // this allows things to be dropped onto the calendar
-    
-    
+    dayMaxEventRows: true,
+    views: { 
+      timeGrid: {
+        dayMaxEventRows: 6 // adjust to 6 only for timeGridWeek/timeGridDay
+      }
+    },
+
     eventDrop: function (info) {
+
+      //print infos id to console
+      console.log(info.event.id);
+
+
       // Get the date of the task
       const month = `${info.event.start.getMonth() + 1}`.padStart(2, '0');
       const day = `${info.event.start.getDate()}`.padStart(2, '0');
       const year = info.event.start.getFullYear();
       const newDate = `${year}-${month}-${day}`;
+      
+      console.log(newDate);
+
 
       // get the time of the task
       const hour = info.event.start.getHours().toString().padStart(2, "0");
@@ -48,11 +62,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Find the task that was dropped using its id
       const task = calendar.tasks.find((task) => task.id == info.event.id);
+      //print the task name to the console
 
       // Update the date and time of the task
       task.date = newDate;
       task.time = `${hour}:${minute}:${second}`;
-      task.urgencyRating();
+
+      saveTasksToFirestore(calendar);
+
+      
     },
     eventResize: function (info) {
       const task = calendar.tasks.find((task) => task.id == info.event.id);
@@ -71,6 +89,8 @@ document.addEventListener("DOMContentLoaded", function () {
       task.time = `${hour}:${minute}:${second}`;
       task.urgencyRating(); 
       console.log(task.taskLength);
+
+      saveTasksToFirestore(calendar);
     },
     eventClick: function (info) {
       // if the task is clicked again, remove the delete button

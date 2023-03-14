@@ -137,7 +137,7 @@ class Task {
       const newTask = document.createElement("li");
       newTask.textContent = `${task.toString()} - ${task.urgencyRating()}`;
       taskList.appendChild(newTask);
-
+      saveTasksToFirestore(calendar);
     }
 
     getTaskById(id) {
@@ -232,6 +232,7 @@ class Task {
             end: endTime,
           };
           fullCalendarCalendar.addEvent(event);
+          saveTasksToFirestore(calendar);
         }
       }
     }
@@ -322,8 +323,6 @@ class Task {
       console.error('Error loading tasks: ', error);
     });
   }
-
-  
 
 
   

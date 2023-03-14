@@ -143,8 +143,6 @@
         <br />
         <input type="button" value="Add Task" id="add-task-button" />
         <input type="button" value="Sort Tasks" id="sort-tasks-button" />
-        <input type="button" value="Save" id="Save" />
-        <input type="button" value="Load" id="Load" />
       </form>
       <p><input type="button" value="log Array" id="log-tasks-button"></p>
     </div>
@@ -154,9 +152,9 @@
       <ul id="task-list"></ul>
     </div>
 
-    <script src="calendar.js"></script>
-    <script src="task6.js"></script>
-    <script src="firebaseAPI.js"></script>
+    <script src="/js/calendar.js"></script>
+    <script src="/js/task6.js"></script>
+    <script src="/js/firebaseAPI.js"></script>
 
     <script>
     firebase.auth().onAuthStateChanged(function(user) {
@@ -168,6 +166,8 @@
         console.log("User is not signed in");
       }
     });
+
+
   </script>
 
   </body>

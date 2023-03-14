@@ -87,10 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
       
       // Update the time of the task
       task.time = `${hour}:${minute}:${second}`;
-      task.urgencyRating(); 
-      console.log(task.taskLength);
-
       saveTasksToFirestore(calendar);
+
     },
     eventClick: function (info) {
       // if the task is clicked again, remove the delete button
@@ -118,9 +116,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Remove the event from the FullCalendar calendar
         info.event.remove();
+        saveTasksToFirestore(calendar);
       });
-      console.log(task);
-      console.log (task.id);
+
     },
   });
 
